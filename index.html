@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ghroast 🔥 پروفایل گیتهابت رو رست کن</title>
+<style>
+:root{--a:#f97316;--b:#ef4444;--bg:#0f0a0a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.13);--dim:rgba(255,255,255,.6)}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;font-family:Vazirmatn,Tahoma,system-ui,sans-serif;color:#fff;background:radial-gradient(900px 500px at 80% -10%,rgba(239,68,68,.35),transparent),radial-gradient(700px 500px at 0% 100%,rgba(249,115,22,.25),transparent),var(--bg);padding:40px 16px}
+main{max-width:680px;margin:0 auto;display:grid;gap:20px}
+h1{font-size:clamp(2.4rem,9vw,4rem);text-align:center;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.sub{text-align:center;color:var(--dim)}
+form{display:flex;gap:8px}
+input,button{font:inherit;color:inherit}
+input{flex:1;direction:ltr;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 18px;outline:none}
+input:focus{border-color:var(--a)}
+button{cursor:pointer;border:0;border-radius:16px;padding:0 22px;font-weight:700;background:linear-gradient(90deg,var(--a),var(--b));transition:.2s}
+button:hover{transform:translateY(-1px);filter:brightness(1.1)}
+button.ghost{background:var(--card);border:1px solid var(--line);padding:10px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;backdrop-filter:blur(12px);animation:up .5s ease}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}
+.head{display:flex;gap:16px;align-items:center}
+.head img{width:76px;height:76px;border-radius:50%;border:3px solid var(--a)}
+.head h2{font-size:1.3rem}.head p{color:var(--dim);direction:ltr;text-align:right}
+.score{margin-right:auto;text-align:center}
+.ring{--p:0;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--a) calc(var(--p)*1%),rgba(255,255,255,.1) 0)}
+.ring b{width:68px;height:68px;border-radius:50%;background:#1a1111;display:grid;place-items:center;font-size:1.4rem}
+.tier{margin:18px 0 6px;font-size:1.15rem;color:var(--a);font-weight:700}
+ul{list-style:none;padding:0;display:grid;gap:10px;margin:14px 0}
+li{background:rgba(255,255,255,.05);border-radius:14px;padding:12px 16px;line-height:1.9;animation:up .5s ease backwards}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chips span{background:rgba(255,255,255,.08);border-radius:99px;padding:4px 12px;font-size:.85rem;color:var(--dim)}
+.err{color:#fca5a5;text-align:center}
+.row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+footer{text-align:center;color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>ghroast 🔥</h1>
+    <p class="sub">یوزرنیم گیتهابت رو بذار، کبابت کنیم! شوخی هستا، دلت نشکنه 😄</p>
+  </header>
+  <form id="f">
+    <input id="u" placeholder="github username" autocomplete="off" autofocus>
+    <button>رست کن!</button>
+  </form>
+  <div id="out"></div>
+  <footer>فقط از API عمومی گیتهاب استفاده می‌کنه · هیچ لاگینی لازم نیست</footer>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const fa = n => Number(n).toLocaleString('fa-IR');
+const days = d => Math.floor((Date.now() - new Date(d)) / 864e5);
+const pick = (arr, n) => arr.sort(() => Math.random() - .5).slice(0, n);
+
+const LANG = {
+  JavaScript: 'جاوااسکریپت؟ همه‌چیز رو با npm install حل می‌کنی؛ حتی زندگی رو. 📦',
+  TypeScript: 'تایپ‌اسکریپتی؛ نوشتن نوع برای هر متغیر ولی هنوز برای زندگیت نوعی پیدا نکردی. 😌',
+  Python: 'پایتون‌کاری؛ ایندنت‌ها تنها چیزیه که ازش می‌ترسی. 🐍',
+  PHP: 'PHP هنوز زنده‌ست؟ مثل تو، سرسخت و جان‌سخت! 🐘',
+  Java: 'جاوا؟ اسم یه کلاست احتمالا بیشتر از تموم کد من جا می‌گیره. ☕',
+  'C++': 'سی‌پلاس‌پلاس؟ شجاعی یا مازوشیست؟ همون segfault هم ترسیده ازت. 💪',
+  C: 'سی؟ پاین‌اومدی حافظه رو خودت مدیریت کنی؛ مردانه ولی تنها. 🧠',
+  Go: 'گو؟ همه‌چیز رو با if err != nil محاصره کردی. 🐹',
+  Rust: 'راست؟ کامپایلرش بیشتر از دوستدخترت بهت گیر می‌ده. 🦀',
+  HTML: 'اچ‌تی‌ام‌ال زبان برنامه‌نویسی نیست رفیق، ولی تو باهاش زندگی می‌کنی! 😂',
+  Shell: 'اسکریپت شل؟ همه‌چیز رو با یه خط حل می‌کنی و بعد سه ساعت دیباگ می‌کنی. 🐚'
+};
+
+function analyze(u, repos) {
+  const own = repos.filter(r => !r.fork);
+  const stars = repos.reduce((s, r) => s + r.stargazers_count, 0);
+  const noDesc = repos.filter(r => !r.description).length;
+  const forks = repos.length - own.length;
+  const lastPush = repos.length ? Math.min(...repos.map(r => days(r.pushed_at))) : 9999;
+  const langs = {};
+  own.forEach(r => r.language && (langs[r.language] = (langs[r.language] || 0) + 1));
+  const topLang = Object.entries(langs).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const best = [...repos].sort((a, b) => b.stargazers_count - a.stargazers_count)[0];
+  const lazyName = repos.find(r => /^(test|hello|untitled|demo|new-?project|my-?first)/i.test(r.name));
+  const n = repos.length;
+
+  const pool = [], good = [];
+  if (!u.bio) pool.push('بیو نداری؛ انگار می‌خوای مرموز باشی، ولی فقط خالیه. 😅');
+  if (u.following > u.followers * 2 && u.following > 10) pool.push(`فالوئینگت ${fa(u.following)} تاست و فالوئرت ${fa(u.followers)}. دنبالِ آدمای خفن گشتن می‌شه شغلت؟ 😂`);
+  if (stars === 0 && n > 3) pool.push(`${fa(n)} تا ریپو و صفر استار؟ حتی خودت هم استار نکردی! 🥲`);
+  if (n && noDesc / n > .5) pool.push(`${fa(noDesc)} تا از ریپوهات توضیح ندارن؛ آینده‌ی خودت هم نمی‌دونه اونا چین. 🤷`);
+  if (n > 3 && forks / n > .5) pool.push('بیشتر ریپوهات فورکن؛ کپی‌برداری حرفه‌ای هستی. 😎');
+  if (lastPush > 180) pool.push(`آخرین پوشت ${fa(lastPush)} روز پیشه؛ گیتهابت تار عنکبوت بسته. 🕸️`);
+  if (n > 40) pool.push(`${fa(n)} تا ریپو؟ تعداد ریپوهات از پروژه‌های تموم‌شده‌ت بیشتره. 📚`);
+  if (n < 3) pool.push(`فقط ${fa(n)} ریپو؟ تازه گرم شدی یا آروم‌آروم می‌ری؟ 🐢`);
+  if (lazyName) pool.push(`ریپوی «${lazyName.name}»؟ نام‌گذاری هم یه هنره رفیق. 🎨`);
+  if (topLang && LANG[topLang]) pool.push(LANG[topLang]);
+  if (u.followers > 1000) pool.push(`با ${fa(u.followers)} فالوئر اینجا سلبریتی‌ای! لطفا امضا بده. ✍️`);
+  if (!u.company && !u.blog && !u.location) pool.push('نه شرکت، نه بلاگ، نه لوکیشن؛ مثل نینجاهای کدنویسی محو شده‌ای. 🥷');
+  if (days(u.created_at) > 365 * 5 && n < 10) pool.push(`بیش از ${fa(Math.floor(days(u.created_at) / 365))} ساله اینجایی و فقط ${fa(n)} ریپو؛ سال‌ها با استادی پایین می‌ره. ⏳`);
+  if (!pool.length) pool.push('از همه‌چیز تمیز و مرتبه؛ نمی‌تونم رستت کنم، بدون هیچ نقطه ضعفی! 😤');
+
+  if (best && best.stargazers_count > 0) good.push(`ریپوی «${best.name}» با ${fa(best.stargazers_count)} استار نشون می‌ده بلدی چیکار کنی. 👏`);
+  else good.push('با این همه رست، هنوز تو گیتهاب موندی و کد می‌زنی؛ اینش خودش یه نمره‌ست! 💛');
+
+  let score = 20 + Math.log10(stars + 1) * 18 + Math.log10(u.followers + 1) * 12;
+  if (n >= 5) score += 8;
+  if (n && noDesc / n < .3) score += 10;
+  if (lastPush < 30) score += 12;
+  if (u.bio) score += 5;
+  score = Math.max(5, Math.min(99, Math.round(score)));
+  const tier = score < 30 ? 'تازه‌کارِ با پتانسیل 🌱' : score < 55 ? 'کدنویسِ کاربلد 🔧' : score < 78 ? 'حرفه‌ایِ خفن 🚀' : 'اسطوره‌ی سیاره‌ی گیتهاب 👑';
+
+  return {roasts: [...pick(pool, 4), ...good], score, tier, stats: {n, stars, forks, topLang, followers: u.followers}};
+}
+
+async function gh(path) {
+  const r = await fetch('https://api.github.com' + path, {headers: {Accept: 'application/vnd.github+json'}});
+  if (r.status === 404) throw new Error('همچن یوزری پیدا نشد 🤔');
+  if (r.status === 403) throw new Error('محدودیت درخواست گیتهاب پر شده؛ یه ساعت بعد دوباره امتحان کن ⏳');
+  if (!r.ok) throw new Error('یه چیزی خراب شد، دوباره امتحان کن');
+  return r.json();
+}
+
+async function roast(name) {
+  const out = $('#out');
+  out.innerHTML = '<p class="sub">دارم ریپوهات رو می‌گردم… 🕵️</p>';
+  try {
+    const [u, repos] = await Promise.all([gh('/users/' + encodeURIComponent(name)), gh('/users/' + encodeURIComponent(name) + '/repos?per_page=100&sort=pushed')]);
+    const r = analyze(u, repos);
+    const card = document.createElement('div'); card.className = 'card';
+
+    const head = document.createElement('div'); head.className = 'head';
+    const img = document.createElement('img'); img.src = u.avatar_url; img.alt = '';
+    const info = document.createElement('div');
+    const h2 = document.createElement('h2'); h2.textContent = u.name || u.login;
+    const at = document.createElement('p'); at.textContent = '@' + u.login;
+    info.append(h2, at);
+    const sc = document.createElement('div'); sc.className = 'score';
+    const ring = document.createElement('div'); ring.className = 'ring'; ring.style.setProperty('--p', r.score);
+    const b = document.createElement('b'); b.textContent = fa(r.score); ring.append(b);
+    sc.append(ring); head.append(img, info, sc);
+
+    const tier = document.createElement('div'); tier.className = 'tier'; tier.textContent = r.tier;
+    const ul = document.createElement('ul');
+    r.roasts.forEach((t, i) => { const li = document.createElement('li'); li.textContent = t; li.style.animationDelay = (i * .12) + 's'; ul.append(li); });
+    const chips = document.createElement('div'); chips.className = 'chips';
+    [`📦 ${fa(r.stats.n)} ریپو`, `⭐ ${fa(r.stats.stars)} استار`, `🍴 ${fa(r.stats.forks)} فورک`, `👥 ${fa(r.stats.followers)} فالوئر`, r.stats.topLang ? `💻 ${r.stats.topLang}` : ''].filter(Boolean).forEach(t => { const s = document.createElement('span'); s.textContent = t; chips.append(s); });
+
+    const row = document.createElement('div'); row.className = 'row';
+    const cp = document.createElement('button'); cp.className = 'ghost'; cp.textContent = '📋 کپی برای اشتراک';
+    cp.onclick = async () => {
+      const txt = `🔥 رست گیتهاب @${u.login} — امتیاز ${r.score}/100 (${r.tier})\n\n` + r.roasts.map(t => '• ' + t).join('\n');
+      try { await navigator.clipboard.writeText(txt); cp.textContent = '✅ کپی شد!'; } catch { cp.textContent = 'کپی نشد 😕'; }
+    };
+    const again = document.createElement('button'); again.className = 'ghost'; again.textContent = '🔁 یه نفر دیگه';
+    again.onclick = () => { $('#u').value = ''; $('#u').focus(); out.replaceChildren(); };
+    row.append(cp, again);
+
+    card.append(head, tier, ul, chips, row);
+    out.replaceChildren(card);
+    history.replaceState(null, '', '?u=' + encodeURIComponent(u.login));
+  } catch (e) {
+    const p = document.createElement('p'); p.className = 'err'; p.textContent = e.message; out.replaceChildren(p);
+  }
+}
+
+$('#f').onsubmit = e => { e.preventDefault(); const v = $('#u').value.trim().replace(/^@/, ''); if (v) roast(v); };
+const q = new URLSearchParams(location.search).get('u');
+if (q) { $('#u').value = q; roast(q); }
+</script>
+</body>
+</html>
